@@ -31,7 +31,12 @@ before_script:
 - minikube addons enable ingress
 # Wait for Kubernetes to be up and ready.
 - JSONPATH='{range .items[*]}{@.metadata.name}:{range @.status.conditions[*]}{@.type}={@.status};{end}{end}'; until kubectl get nodes -o jsonpath="$JSONPATH" 2>&1 | grep -q "Ready=True"; do sleep 1; done
-
+- docker build lunatech-apps-docker/airport -t shahabshahab2/airport-apiserver:1.0.1
+- docker build lunatech-apps-docker/airport -f Dockerfile.1.1.0 -t shahabshahab2/airport-apiserver:1.1.0
+- docker build lunatech-apps-docker/country -t shahabshahab2/country-apiserver:1.0.1
+- docker push shahabshahab2/airport-apiserver:1.0.1
+- docekr push shahabshahab2/airport-apiserver:1.1.0
+- docker push shahabshahab2/country-apiserver:1.0.1
 script:
 - kubectl cluster-info
 - /bin/bash start-travis.sh
