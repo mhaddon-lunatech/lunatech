@@ -44,6 +44,6 @@ deploy:
 	bash -c	"kubectl apply -f deployments/airports/"
 	bash -c	"kubectl apply -f deployments/countries/"
 	bash -c	"kubectl apply -f deployments/jenkins/"
-@echo "Access this services by using this url:"
+	@echo "Access this services by using this url:"
 	bash -c "minikube service  --url -n lunatech"
 
