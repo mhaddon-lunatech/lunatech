@@ -38,6 +38,17 @@
 * Update airports service from v1.0.1 to v1.1.0: `make upgrade-airports`
 * Clean the entire stack by `make clean`
 
+
+service	endpoint	result
+countries v1.0.1	/countries	full list of countries
+/countries/<qry>	to search by name \ iso code
+airports v1.0.1	/airports	full list of airports
+/airports/<qry>	to get a list of airports based on country code (e.g.: "nl")
+airports v1.1.0	/airports/<id>	Returns the full information of an airport based on its identifier. E.g.: /airports/EHAM returns all information for Schiphol.
+/airports?full=[0|1]	Returns a summary or all details of all airports, depending on the value of full.
+/search/<qry>	Returns a list of airports based on a country code search.
+
+
 ## Explanation
 * Projects isolated from each other by using 
 
