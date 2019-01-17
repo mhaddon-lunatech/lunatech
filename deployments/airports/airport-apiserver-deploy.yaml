@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name:  airport-api-server-deployment
+  namespace: lunatech
+  labels:
+    name:   airport-api-server
+    role: api-server-deploy
+spec:
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: airport-apiserver
+        role: api-server
+      name: airport-apiserver
+    spec:
+      containers:
+      - name: airport-api-server
+        image: shahabshahab2/airport-apiserver:1.0.1
+        ports:
+          - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 10
+          timeoutSeconds: 30
+          periodSeconds: 5

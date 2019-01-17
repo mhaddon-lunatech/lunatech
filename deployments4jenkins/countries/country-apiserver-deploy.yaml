@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name:  country-api-server-deployment
+  namespace: lunatech
+  labels:
+    name: country-api-server
+    role: api-server-deploy
+spec:
+  replicas: 2
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: country-apiserver
+        role: api-server
+      name: country-apiserver
+    spec:
+      containers:
+      - name: country-api-server
+        image: shahabshahab2/country-apiserver:VERSION #1.0.1, will replace in build process in jenkins
+        ports:
+          - containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /health/live
+            port: 8080
+          initialDelaySeconds: 15
+          periodSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /health/ready
+            port: 8080
+          initialDelaySeconds: 10
+          timeoutSeconds: 30
+          periodSeconds: 5

@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: jenkins-server-exposeservice
+  namespace: lunatech
+spec:
+  ports:
+  - port: 9090
+    protocol: TCP
+    targetPort: 9090
+  selector:
+    app: jenkins-server
+  sessionAffinity: None
+  type: NodePort

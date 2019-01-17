@@ -1,0 +1,90 @@
+
+pipeline {
+  environment {
+    registry = "shahabshahab2/country-apiserver"
+    registryCredential = "dockerhub"
+    dockerImage = 'country-apiserver'
+  }
+  agent any
+  stages {
+    stage('STG: Git Fetch') {
+      steps {
+        git 'https://github.com/shahabshahab2/lunatech.git'
+
+      }
+    }
+  stage('STG: Build image') {
+      steps{
+        script {
+          dockerImage = docker.build registry + ":$VERSION"
+        }
+      }
+    }
+    stage('STG: Deploy Image') {
+      steps{
+         script {
+            docker.withRegistry( '', registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage('STG: Create Namespace'){
+      steps{
+        script{
+          sh 'kubectl apply -f deployments4jenkins/0-namespace.yaml'
+        }
+      }
+    }
+    stage('STG: Integration'){
+      steps{
+        script{
+          //Set latest docker tag
+          sh 'sed -i s,VERSION,${VERSION},g deployments4jenkins/countries'
+          //Send to the cluster
+          sh 'kubectl apply -f deployments/countries'
+
+          }
+      }
+    }
+    stage('Production'){
+      steps{
+        script{
+          //update deployment manifests with latest docker tag
+          sleep 10
+          sh 'sed -i s,BUILD_ID,${VERSION},g deployment-manifests/production/web-frontend-deployment.yaml'
+          //deploy on cluster
+          sh 'kubectl apply -f deployment-manifests/production --namespace=web_app-production'
+
+
+          //Gathering ELB app's external IP address
+             def ip = ''
+             def count = 0
+             def countLimit = 10
+
+             //Waiting loop for IP address provisioning
+             println("Waiting for IP address")
+             while(ip=='' && count<countLimit) {
+               //sleep while ELB being ready
+               sleep 15
+              ip = sh script: "kubectl get svc --namespace=webapp-production -o jsonpath='{.items[*].status.loadBalancer.ingress[*].hostname}'", returnStdout: true
+              ip = ip.trim()
+              count++
+         }
+
+       if(ip==''){
+        error("Not able to get the IP address. Aborting...")
+
+       }
+       else{
+         //waiting till instance become healthly in the ELB
+         sleep 120
+           //Executing tests
+
+        sh "chmod +x tests/production_test.sh && ./tests/production_test.sh ${ip}"
+              }
+        }
+      }
+    }
+  }
+}

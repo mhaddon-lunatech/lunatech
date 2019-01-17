@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name:  jenkins-server-deployment
+  namespace: lunatech
+  labels:
+    app: jenkins-server
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 1
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: jenkins-server
+      name: jenkins-server
+    spec:
+      containers:
+      - name: jenkins-server-con
+        image: shahabshahab2/jenkins:2.7.6
+        ports:
+          - containerPort: 9090
