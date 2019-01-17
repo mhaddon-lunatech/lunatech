@@ -88,6 +88,10 @@
 * Health-checks is done by Kubernetes and will restart the container if something goes wrong. Each image have it's own heath-check and readiness url ( health/live & /health/ready) 
 * Travis CI besides Jenkins is used for CI/CD. Config file: `.travis.yml`
 
+![][Arch]
+
 # Known Issues
 
 - Since in the minikube ingress is enabled as an addon, the nginx-ingress-controller automatically exposes 80 and 443 ports (and not 8000). 
+
+[Arch]:  https://cdn1.imggmi.com/uploads/2019/1/17/a632f6d09d3441d977b9f36a30260164-full.png
