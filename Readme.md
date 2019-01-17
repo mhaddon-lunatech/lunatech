@@ -39,14 +39,44 @@
 * Clean the entire stack by `make clean`
 
 
-service	endpoint	result
-countries v1.0.1	/countries	full list of countries
-/countries/<qry>	to search by name \ iso code
-airports v1.0.1	/airports	full list of airports
-/airports/<qry>	to get a list of airports based on country code (e.g.: "nl")
-airports v1.1.0	/airports/<id>	Returns the full information of an airport based on its identifier. E.g.: /airports/EHAM returns all information for Schiphol.
-/airports?full=[0|1]	Returns a summary or all details of all airports, depending on the value of full.
-/search/<qry>	Returns a list of airports based on a country code search.
+<table>
+    <tr>
+        <td>service</td>
+        <td>endpoint</td>
+        <td>result</td>
+    </tr>
+    <tr>
+        <td rowspan="2">countries v1.0.1</td>
+        <td>/countries</td>
+        <td>full list of countries</td>
+    </tr>
+    <tr>
+        <td>/countries/&lt;qry&gt;</td>
+        <td>to search by name \ iso code</td>
+    </tr>
+    <tr>
+        <td rowspan="2">airports v1.0.1</td>
+        <td>/airports</td>
+        <td>full list of airports</td>
+    </tr>
+    <tr>
+        <td>/airports/&lt;qry&gt;</td>
+        <td>to get a list of airports based on country code (e.g.: "nl")</td>
+    </tr>
+    <tr>
+        <td rowspan="3">airports v1.1.0</td>
+        <td> /airports/&lt;id&gt; </td>
+        <td>Returns the full information of an airport based on its identifier. E.g.: /airports/EHAM returns all information for Schiphol.</td>
+    </tr>
+    <tr>
+        <td> /airports?full=[0|1]</td>
+        <td> Returns a summary or all details of all airports, depending on the value of full.</td>
+        </tr>
+    <tr>
+        <td>/search/&lt;qry&gt;</td>
+        <td> Returns a list of airports based on a country code search.</td>
+    </tr>
+</table>
 
 
 ## Explanation
