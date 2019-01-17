@@ -11,3 +11,7 @@ spec:
         backend:
           serviceName: airport-api-server-exposeservice
           servicePort: 8080
+      - path: /search
+        backend:
+          serviceName: airport-api-server-exposeservice
+          servicePort: 8080

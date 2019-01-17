@@ -34,9 +34,18 @@ kubectl apply -f https://docs.projectcalico.org/v3.2/getting-started/kubernetes/
 
 `git clone https://github.com/shahabshahab2/lunatech.git`
 
+###Updating airports service to newer version:(Manually)
+````kubectl set image deployment airports airports=flomsk/airports:v1.1.0 ````
+check status with: 
+````kubectl rollout status deployment airports ````
+Cleaning up:
+
+````kubectl delete ns lunatech````
+````minikube stop && minikube delete````
 
 
 
 # Known Issues
 
 - Since in the minikube ingress is enabled as an addon, the nginx-ingress-controller automatically exposes 80 and 443 ports (and not 8000).
+- After updating to new airport version, path 
