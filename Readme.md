@@ -6,6 +6,7 @@
 2. Install latest [kubectl](https://kubernetes.io/docs/tasks/tools/install-kubectl/) tool on your laptop.
 3. Set the memory size for minikube VM to at least 4GB `minikube config set memory 4096`
 4. Bring up a minikube cluster.
+
    4.1. 
     `minikube start --extra-config=kubelet.network-plugin=cni --network-plugin=cni`
     To be able to constrain inter-communication between the two services do as follow:
