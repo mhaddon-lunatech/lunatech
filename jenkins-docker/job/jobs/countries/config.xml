@@ -1,6 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<project>
-  <actions/>
+<flow-definition plugin="workflow-job@2.9">
   <description></description>
   <keepDependencies>false</keepDependencies>
   <properties>
@@ -9,49 +8,86 @@
         <hudson.model.StringParameterDefinition>
           <name>VERSION</name>
           <description></description>
-          <defaultValue></defaultValue>
-          <trim>false</trim>
+          <defaultValue>1.0.1</defaultValue>
         </hudson.model.StringParameterDefinition>
       </parameterDefinitions>
     </hudson.model.ParametersDefinitionProperty>
+    <org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
+      <triggers/>
+    </org.jenkinsci.plugins.workflow.job.properties.PipelineTriggersJobProperty>
   </properties>
-  <scm class="hudson.scm.NullSCM"/>
-  <canRoam>true</canRoam>
-  <disabled>false</disabled>
-  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
-  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.23">
+    <script>
+pipeline {
+  environment {
+    registry = &quot;shahabshahab2/country-apiserver&quot;
+    registryCredential = &quot;dockerhub&quot;
+    dockerImage = &apos;country-apiserver&apos;
+  }
+  agent any
+  stages {
+    stage(&apos;STG: Git Fetch&apos;) {
+      steps {
+        git &apos;https://github.com/shahabshahab2/lunatech.git&apos;
+
+      }
+    }
+  stage(&apos;STG: Build image&apos;) {
+      steps{
+        script {
+          dockerImage = docker.build registry + &quot;:$VERSION&quot;
+        }
+      }
+    }
+    stage(&apos;STG: Deploy Image&apos;) {
+      steps{
+         script {
+            docker.withRegistry( &apos;&apos;, registryCredential ) {
+            dockerImage.push()
+          }
+        }
+      }
+    }
+    stage(&apos;STG: Create Namespace&apos;){
+      steps{
+        script{
+          sh &apos;kubectl apply -f deployments4jenkins/0-namespace.yaml&apos;
+        }
+      }
+    }
+    stage(&apos;STG: Integration&apos;){
+      steps{
+        script{
+          //Set latest docker tag
+          sh &apos;sed -i s,VERSION,${VERSION},g deployments4jenkins/countries&apos;
+          //Send to the cluster
+          sh &apos;kubectl apply -f deployments4jenkins/countries&apos;
+
+          }
+      }
+    }
+    stage(&apos;Production&apos;){
+      steps{
+        script{
+          //update deployment manifests with latest docker tag
+          sh &apos;sed -i s,BUILD_ID,${VERSION},g deployments4jenkins/countries/country-apiserver-deploy.yaml&apos;
+          //deploy on cluster
+          sh &apos;kubectl apply -f deployments4jenkins/countries/&apos;
+
+
+          //Gathering ELB app&apos;s external IP address
+             def ip = &apos;&apos;
+             def count = 0
+             def countLimit = 10
+
+
+        }
+      }
+    }
+  }
+}
+</script>
+    <sandbox>true</sandbox>
+  </definition>
   <triggers/>
-  <concurrentBuild>false</concurrentBuild>
-  <builders>
-    <hudson.tasks.Shell>
-      <command>#!/usr/bin/env python
-
-import os
-import time
-import sys
-
-version = os.popen(&quot;echo $VERSION&quot;).read()
-
-print (&quot;Deploying version [%s]&quot; %version)
-
-os.system(&quot;kubectl delete deployment countries -n lunatech --ignore-not-found=true&quot;)
-os.system(&quot;kubectl run countries -n lunatech --image=212104571535.dkr.ecr.us-west-2.amazonaws.com/countries:%s&quot; %version)
-os.system(&quot;kubectl expose deployment/countries --port=8080 -n lunatech&quot;)
-    
-time.sleep(120)
-    
-pods = os.popen(&quot;kubectl get pods -n lunatech | grep -i countries&quot;).read()
-pod = pods.split()[0]
-state = pods.split()[2]
-
-if state == &quot;Running&quot;:
-    print (&quot;Pod [%s] is [%s]&quot; %(pod, state))
-    sys.exit(0)
-else:
-    print (&quot;Pod [%s] is [%s]&quot; %(pod, state))
-    sys.exit(1)</command>
-    </hudson.tasks.Shell>
-  </builders>
-  <publishers/>
-  <buildWrappers/>
-</project>
+</flow-definition>
