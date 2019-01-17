@@ -40,7 +40,10 @@ clean:
 
 deploy:
 	bash -c "kubectl apply -f deployments/0-namespace.yaml"
-	bash -c "kubectl apply -f deployments/"
+	bash -c	"kubectl apply -f deployments/kube-addons/"
+	bash -c	"kubectl apply -f deployments/airports/"
+	bash -c	"kubectl apply -f deployments/countries/"
+	bash -c	"kubectl apply -f deployments/jenkins/"
 @echo "Access this services by using this url:"
 	bash -c "minikube service  --url -n lunatech"
 
