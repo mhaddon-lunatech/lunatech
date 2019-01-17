@@ -86,6 +86,7 @@
 * Reverse-proxy can be achieved by `ingress nginx`, and kubenetes network. 
 
 * Health-checks is done by Kubernetes and will restart the container if something goes wrong. Each image have it's own heath-check and readiness url ( health/live & /health/ready) 
+* Travis CI besides Jenkins is used for CI/CD. Config file: `.travis.yml`
 
 # Known Issues
 
