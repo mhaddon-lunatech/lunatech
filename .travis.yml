@@ -7,7 +7,7 @@ env:
 
 before_script:
 - docker build lunatech-apps-docker/airport -t shahabshahab2/airport-apiserver:1.0.1
-- docker build lunatech-apps-docker/airport -f Dockerfile.1.1.0 -t shahabshahab2/airport-apiserver:1.1.0
+- docker build lunatech-apps-docker/airport -f lunatech-apps-docker/airport/Dockerfile.1.1.0 -t shahabshahab2/airport-apiserver:1.1.0
 - docker build lunatech-apps-docker/country -t shahabshahab2/country-apiserver:1.0.1
 - docker push shahabshahab2/airport-apiserver:1.0.1
 - docekr push shahabshahab2/airport-apiserver:1.1.0
