@@ -35,7 +35,7 @@
 
 `git clone https://github.com/shahabshahab2/lunatech.git`
 
-* Start the entire stack by `make`
+* Start the entire stack by `make` and follow the instructions:
 * Update airports service from v1.0.1 to v1.1.0: `make upgrade-airports`
 * Clean the entire stack by `make clean`
 

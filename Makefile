@@ -11,6 +11,7 @@ help:
 	@echo "#  jenkins        Exec Jenkins CI/CD app    "
 	@echo "#  clean          Remove local containers   "
 	@echo "#  deploy         All K8s OBJECT CREATION   "
+	@echo "#  upgrade-airports update airport to 1.1.0 "
 	@echo "============================================"
 
 airports:
@@ -30,6 +31,9 @@ jenkins:
 	bash -c "kubectl apply -f deployments/jenkins"
 	@echo "Access this service by using this url:"
 	bash -c "minikube service jenkins-server-exposeservice --url"
+
+upgrade-airports:
+	bash -c "kubectl set image deployment airport-api-server-deployment airport-api-server=shahabshahab2/airport-apiserver:1.1.0 -n lunatech"
 
 clean:
 	bash -c "minikube stop && minikube delete"
