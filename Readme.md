@@ -48,4 +48,3 @@ Cleaning up:
 # Known Issues
 
 - Since in the minikube ingress is enabled as an addon, the nginx-ingress-controller automatically exposes 80 and 443 ports (and not 8000).
-- After updating to new airport version, path 
