@@ -86,20 +86,6 @@
 
 * Health-checks is done by Kubernetes and will restart the container if something goes wrong. Each image have it's own heath-check and readiness url ( health/live & /health/ready) 
 
-
-### Updating airports service to newer version:(Manually)
-````kubectl set image deployment airports airports=shahabshahab2/airports:v1.1.0 ````
-check status with: 
-````kubectl rollout status deployment airports ````
-
-
-### Cleaning up:
-
-````kubectl delete ns lunatech````
-````minikube stop && minikube delete````
-
-
-
 # Known Issues
 
 - Since in the minikube ingress is enabled as an addon, the nginx-ingress-controller automatically exposes 80 and 443 ports (and not 8000). 
